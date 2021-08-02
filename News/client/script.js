@@ -1,48 +1,30 @@
-(async () => {
+(async() => {
 
     try {
 
-        let API_KEY = `0657b40e70d14c16bb3a05fbd6bbdfdf`
-        let newsCard = document.querySelectorAll(".newCard");
-        let menuButton = document.querySelector("#menuButton");
+        let KEY_WORD;
+        let API_KEY = `0657b40e70d14c16bb3a05fbd6bbdfdf`;
+        let trendingURL = `https://newsapi.org/v2/top-headlines?sources=CNN,fox-news&apiKey=${API_KEY}`;
+        let searchURL = `https://newsapi.org/v2/everything?q=${KEY_WORD}&sources=CNN,fox-news&sortBy=publishedAt&apiKey=${API_KEY}`
 
-        let search = async (KEY_WORD) => {
-            let url = `https://newsapi.org/v2/everything?q=${KEY_WORD}&sources=CNN&sortBy=publishedAt&apiKey=${API_KEY}`
-            let result = await fetch(url);
-            let data = await result.json()
-            for (object of data.articles) {
-                let searchResultsObject = {
-                    image: object.urlToImage,
-                    title: object.title,
-                    content: object.content,
-                    url: object.url
-                }
-                console.log(searchResultsObject)
-            }
-            switch (data.totalResults) {
-                case 0:
-                    console.log('No results :(')
-                    break;
-                default:
-                    break
-            }
-            console.log(`Total: ${data.totalResults}`)
-        }
+        let menuButton = document.querySelector("#menuButton");
+        let categories = document.querySelectorAll(".category");
+        let searchInput = document.querySelector(".search");
+        let logo = document.querySelector(".logo");
+
+        let removeElements = (elms) => elms.forEach(el => el.remove());
 
         let getDate = (shortDate) => {
-            let newDate = new Date(shortDate)
+            let newDate = new Date(shortDate);
             let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-            shortDate = newDate.getDate()
-            shortMonth = newDate.getMonth()
-            fixedDate = monthNames[shortMonth] + " " + shortDate
-
+            shortDate = newDate.getDate();
+            shortMonth = newDate.getMonth();
+            fixedDate = monthNames[shortMonth] + " " + shortDate;
             return fixedDate
         }
 
-
-        let pageSetup = async () => {
-
+        let pageSetup = async() => {
 
             menuButton.addEventListener('change', () => {
                 if (menuButton.checked) {
@@ -50,23 +32,69 @@
                 } else {
                     document.querySelector(".the-bass").classList.remove("dropped");
                 }
-            })
+            });
 
+            for (let category of categories) {
+                category.addEventListener('click', () => {
 
+                    let searchQuery = category.textContent;
+                    searchQuery = searchQuery.toLowerCase();
 
+                    switch (searchQuery) {
+                        case "trending":
+                            console.log(`Changing query to trending`)
+                            cardData(trendingURL);
+                            break;
 
+                        case "search":
+                            searchFunction()
+                            break;
 
+                            // case credits
+                            //     displayCredits();
+                            //     break;
 
-            let url = `https://newsapi.org/v2/top-headlines?sources=CNN,fox-news&apiKey=${API_KEY}`
+                        default:
+                            console.log(`Changing query to ${searchQuery}`)
+                            cardData(`https://newsapi.org/v2/top-headlines?category=${searchQuery}&country=us&apiKey=${API_KEY}`);
+                            break;
+                    }
+
+                });
+            }
+
+            cardData(trendingURL);
+        }
+
+        let searchFunction = () => {
+            removeElements(document.querySelectorAll(".newCard"))
+            searchInput.textContent = ""
+
+            searchInput.addEventListener('keydown', (event) => {
+                if (event.keyCode === 13) {
+
+                    event.preventDefault();
+                    KEY_WORD = searchInput.textContent
+                    cardData(`https://newsapi.org/v2/everything?q=${KEY_WORD}&sources=CNN&sortBy=publishedAt&apiKey=${API_KEY}`)
+
+                }
+            });
+
+            searchInput.addEventListener('focusout', () => {
+                searchInput.textContent = "Search"
+            });
+        }
+
+        let cardData = async(url) => {
             let results = await fetch(url);
             let data = await results.json();
             window.currentNewsArray = []
 
             for (object of data.articles) {
-                if (object.hasOwnProperty("urlToImage") && object.title.length < 70) {
+                if (object.hasOwnProperty("urlToImage") && object.urlToImage !== "null" && object.title.length < 70) {
                     currentNewsArray.push({
                         image: object.urlToImage,
-                        date: [getDate(object.publishedAt).split(" ")[0],getDate(object.publishedAt).split(" ")[1]],
+                        date: [getDate(object.publishedAt).split(" ")[0], getDate(object.publishedAt).split(" ")[1]],
                         title: object.title.split("-")[0],
                         description: object.description,
                         content: object.content,
@@ -78,9 +106,9 @@
             return currentNewsArray
         }
 
-        let createCards = async () => {
+        let createCards = async() => {
+            removeElements(document.querySelectorAll(".newCard"))
             for (card of currentNewsArray) {
-                console.log(card)
                 document.querySelector(".body").innerHTML += `
                     <div class="newCard">
                         <img src="${card.image}" alt="pr-sample13" />
@@ -95,15 +123,8 @@
             }
         }
 
-
         pageSetup()
-
-        // for (let card of newsCard) {
-        //     card.querySelector("h3").innerHTML = currentNewsObject.title
-        //     // card.addEventListener('click', () => {
-        //     //     openArticle(card)
-        //     // });
-        // }
+        logo.addEventListener('click', () => cardData(trendingURL))
 
 
     } catch (err) {
@@ -111,8 +132,3 @@
     }
 
 })();
-
-
-
-
-// let url = `https://newsapi.org/v2/everything?q=Apple&from=2021-07-29&sortBy=popularity&apiKey=${API_KEY}`;
