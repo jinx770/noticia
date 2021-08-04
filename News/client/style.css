@@ -307,7 +307,8 @@ body {
 }
 
 .body {
-    margin-top: 20px
+    margin-top: 20px;
+    transition: 1s;
 }
 
 .newCard a {
@@ -335,4 +336,21 @@ body {
 .newCard.hover .date {
     -webkit-transform: translateY(-100%);
     transform: translateY(-100%)
+}
+
+
+@media only screen and (min-width: 768px) {
+    .newCard {
+        display:flex;
+        flex-direction: column;
+        max-width: 510px;
+    }
+
+    .newCard:hover {
+        cursor: pointer;
+    }
+
+    body {
+        transition: 1s;
+    }
 }
