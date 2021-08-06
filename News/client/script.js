@@ -1,4 +1,4 @@
-(async() => {
+(async () => {
 
     try {
 
@@ -11,8 +11,7 @@
         let categories = document.querySelectorAll(".category");
         let searchInput = document.querySelector(".search");
         let logo = document.querySelector(".logo");
-
-        let removeElements = (elms) => elms.forEach(el => el.remove());
+        let profileCard = document.querySelector(".profile-card");
 
         let getDate = (shortDate) => {
             let newDate = new Date(shortDate);
@@ -24,7 +23,13 @@
             return fixedDate
         }
 
-        let pageSetup = async() => {
+        let removeElements = (elms) => elms.forEach(el => el.remove());
+
+        logo.addEventListener('click', () => cardData(trendingURL))
+
+        $(document).on('click', '.profile-card, .content', () => $('.profile-card, .profile-clip, .profile-pic, .cover, .button, .name, .info, .left, .right, .content').toggleClass('expand'));
+
+        let pageSetup = async () => {
 
             menuButton.addEventListener('change', () => {
                 if (menuButton.checked) {
@@ -47,12 +52,13 @@
                             break;
 
                         case "search":
-                            searchFunction()
+                            searchFunction();
                             break;
 
-                            // case credits
-                            //     displayCredits();
-                            //     break;
+                        case "credits":
+                            console.log("Changing query to credits")
+                            displayCredits();
+                            break;
 
                         default:
                             console.log(`Changing query to ${searchQuery}`)
@@ -85,13 +91,26 @@
             });
         }
 
-        let cardData = async(url) => {
+        let createLink = () => {
+            setTimeout(() => {
+                let allCards = document.querySelectorAll(".newCard")
+                console.log(allCards)
+
+                for (let i = 0; i < allCards.length; i++) {
+                    allCards[i].addEventListener('click', () => {
+                        window.open(currentNewsArray[i].url)
+                    });
+                }
+            }, 1500)
+        }
+
+        let cardData = async (url) => {
             let results = await fetch(url);
             let data = await results.json();
             window.currentNewsArray = []
 
             for (object of data.articles) {
-                if (object.hasOwnProperty("urlToImage") && object.urlToImage !== "null" && object.title.length < 70) {
+                if (object.hasOwnProperty("urlToImage") && object.urlToImage !== "" && object.title.length < 70) {
                     currentNewsArray.push({
                         image: object.urlToImage,
                         date: [getDate(object.publishedAt).split(" ")[0], getDate(object.publishedAt).split(" ")[1]],
@@ -106,7 +125,7 @@
             return currentNewsArray
         }
 
-        let createCards = async() => {
+        let createCards = async () => {
             removeElements(document.querySelectorAll(".newCard"))
             for (card of currentNewsArray) {
                 document.querySelector(".body").innerHTML += `
@@ -121,10 +140,55 @@
                     </div>
                 `
             }
+            createLink()
+            if (document.querySelector(".container")) {
+                document.querySelector(".container").remove()
+            }
+        }
+
+        let displayCredits = () => {
+            removeElements(document.querySelectorAll(".newCard"))
+            document.querySelector(".body").innerHTML += `
+                    <div class="container">
+                      <div class="profile-card">
+                        <div class="profile-clip">
+                          <div class="cover-clip">
+                            <img class="cover" src="https://alder.vercel.app/assets/img/portfolio/Image224.jpg"/>
+                          </div>
+                        </div>
+                        <div class="profile-wrap">
+                          <img alt="Troy Thompson" class="profile-pic" src="https://alder.vercel.app/assets/img/portfolio/Image107.jpg"/>
+                          <i class="zmdi zmdi-close close"></i>
+                          <div class="name">
+                            Troy Thompson
+                            <span class="info">
+                              Junior UX Designer
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="profile-content">
+                        <div class="placeholder-wrap left">
+                          <div class="placeholder box1"></div>
+                        </div>
+                        <div class="placeholder-wrap right">
+                          <div class="placeholder box2"></div>
+                          <div class="placeholder box3"></div>
+                        </div>
+                      </div>
+                    </div>
+                    `
+
+            document.querySelector(".profile-card").addEventListener('click', () => {
+                if (!document.querySelector(".profile-card").classList.contains("expand")) {
+                    document.querySelector(".profile-pic").style.display = "none";
+                } else {
+                    document.querySelector(".profile-pic").style.display = "block";
+                }
+            });
         }
 
         pageSetup()
-        logo.addEventListener('click', () => cardData(trendingURL))
 
 
     } catch (err) {

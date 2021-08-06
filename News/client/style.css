@@ -339,6 +339,243 @@ body {
 }
 
 
+
+
+
+ *, *:before, *:after {
+	 box-sizing: inherit;
+	 -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+ .clearfix:before, .clearfix:after {
+	 content: " ";
+	 display: table;
+}
+ .clearfix:after {
+	 clear: both;
+}
+ .profile-content {
+	 height: 30em;
+	 width: 40em;
+	 max-width: 40em;
+	 position: relative;
+	 overflow: hidden;
+	 transition: all 0.5s;
+	 pointer-events: none;
+}
+ .profile-content.expand {
+	 transform: scale(1);
+}
+ .placeholder-wrap {
+	 position: absolute;
+	 justify-content: center;
+	 align-items: center;
+	 display: flex;
+	 flex-flow: column;
+	 width: 50%;
+	 top: 40%;
+	 height: 60%;
+}
+ .left {
+	 right: 48.7%;
+	 transform: translateY(8em);
+	 opacity: 0;
+	 transition: all 0.1s;
+}
+ .left.expand, .right.expand {
+	 transform: translateY(0em);
+	 opacity: 1;
+	 transition: all 0.5s;
+}
+ .right {
+	 left: 48.7%;
+	 transform: translateY(8em);
+	 opacity: 0;
+	 transition: all 0.1s;
+}
+ .placeholder {
+	 margin: 1em;
+	 background: #eee;
+	 width: 85%;
+	 height: 8em;
+	 border-radius: 10px;
+}
+ .box1 {
+	 height: 90%;
+}
+ .box2 {
+	 height: 35%;
+}
+ .box3 {
+	 height: 55%;
+}
+ .container {
+	 width: 100vw;
+	 display: flex;
+	 justify-content: center;
+	 align-items: center;
+	 position: relative;
+}
+ .profile-card {
+	 display: flex;
+	 position: absolute;
+	 width: 18em;
+	 height: 6em;
+	 background: #fff;
+	 transition: all 0.5s;
+	 transform-origin: center;
+	 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+	 overflow: hidden;
+	 position: absolute;
+	 border-radius: 3px;
+	 cursor: pointer;
+	 will-change: transform;
+	 -webkit-backface-visibility: hidden;
+	 backface-visibility: hidden;
+	 max-width: 40em;
+}
+ .profile-card.expand, .profile-clip.expand {
+	 width: 40em;
+	 height: 30em;
+}
+ .profile-pic {
+	 position: absolute;
+	 left: 10%;
+	 top: calc((6em - 4.2em) / 2);
+	 width: 4.2em;
+	 height: 4.2em;
+	 border-radius: 100%;
+	 transition: 0.5s;
+	 will-change: transform;
+	 -webkit-backface-visibility: hidden;
+	 backface-visibility: hidden;
+}
+ .profile-pic.expand {
+	 transform: translateY(3.8em) scale(1.4);
+}
+ .cover {
+	 width: 40em;
+	 height: 85vh;
+	 filter: brightness(60%);
+}
+ .profile-clip {
+	 border-radius: 3px;
+	 position: absolute;
+	 width: 18em;
+	 height: 6em;
+	 max-width: 40em;
+	 transition: opacity 0.1s, width 0.5s, height 0.5s;
+	 overflow: hidden;
+	 transform-origin: center;
+	 will-change: transform;
+	 opacity: 0;
+}
+ .profile-clip.expand {
+	 opacity: 1;
+	 height: 40%;
+	 transition: opacity 1s, width 0.5s, height 0.5s;
+}
+ .button {
+	 left: 50%;
+	 position: absolute;
+	 transform: translateX(1em);
+	 top: calc((6em - 2.6em) / 2);
+	 height: 2.6em;
+	 width: 6.5em;
+	 text-align: center;
+	 line-height: 2.6em;
+	 background: #fff;
+	 border-radius: 3px;
+	 cursor: pointer;
+	 opacity: 0;
+	 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
+	 z-index: 15;
+	 will-change: transform;
+	 -webkit-backface-visibility: hidden;
+	 backface-visibility: hidden;
+}
+ .button.expand {
+	 opacity: 1;
+	 transform: translateX(10em) translateY(4.2em);
+	 transition: transform 0.5s, opacity 0.3s 0.1s;
+}
+ .close {
+	 position: absolute;
+	 font-size: 1.5em;
+	 top: 0.7em;
+	 right: 1em;
+	 color: rgba(255, 255, 255, 0.5);
+	 cursor: pointer;
+}
+ .name {
+	 position: absolute;
+	 left: 50%;
+	 transform: translateX(-2em);
+	 top: calc(50% - .5em);
+	 z-index: 3;
+	 transition: 0.5s;
+	 font-size: 20px;
+	 text-align: left;
+	 display: block;
+	 height: 1em;
+	 width: 7.5em;
+	 text-align: center;
+	 display: flex;
+	 flex-direction: column;
+	 justify-content: center;
+	 will-change: transform;
+	 -webkit-backface-visibility: hidden;
+	 backface-visibility: hidden;
+}
+ .name.expand {
+	 font-style: bold;
+	 color: #fff;
+	 transform: translateX(-7.5em) translateY(-6.2em) scale(1.2);
+}
+ .info {
+	 padding-top: 5px;
+	 display: block;
+	 font-size: 15px;
+	 color: #373536;
+}
+ .info.expand {
+	 color: #eaeaea;
+}
+
+ @media screen and (max-width: 44em) {
+	 .profile-pic.expand {
+		 left: 50%;
+		 transform: translateX(-50%) translateY(0.8em) scale(1);
+	}
+	 .name.expand {
+		 left: 50%;
+		 transform: translateX(-50%) translateY(-5.6em) scale(1);
+	}
+	 .button {
+		 transform: translateX(-50%);
+	}
+	 .button.expand {
+		 transform: translateX(-50%) translateY(10em);
+		 height: 2.2em;
+		 width: 6em;
+		 line-height: 2.2em;
+		 font-size: 0.9em;
+	}
+	 .profile-clip.expand {
+		 opacity: 1;
+		 height: 46%;
+		 transition: opacity 1s, width 0.5s, height 0.5s;
+	}
+	 .placeholder-wrap {
+		 top: 46%;
+		 height: 54%;
+	}
+	 .profile-content, .profile-card {
+		 max-width: 90vw;
+	}
+}
+
+
+
 @media only screen and (min-width: 768px) {
     .newCard {
         display:flex;
