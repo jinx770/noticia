@@ -5,4 +5,4 @@ Has basic functions such as filtering, searching and transitions and should not 
 ## Usage
 Make sure express is installed - npm install express      
 Start the server on localhost - node server/node.js       
-Uses port 3000 - localhost:3000
+Use port 3000 - localhost:3000
