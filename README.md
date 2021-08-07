@@ -15,4 +15,4 @@ Use port 3000 - localhost:3000
 
 
 
-Accidentally deleted my server folder on atom and couldn't recover it so that was annoying lol
+Had to redo my server/node.js after accidentally deleting it on atom, so that was fun lol.
