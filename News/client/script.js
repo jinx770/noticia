@@ -2,10 +2,10 @@
 
     try {
 
+        // DOM Declarations
         let KEY_WORD;
-        let API_KEY = `0657b40e70d14c16bb3a05fbd6bbdfdf`;
-        let trendingURL = `https://newsapi.org/v2/top-headlines?sources=CNN,fox-news&apiKey=${API_KEY}`;
-        let searchURL = `https://newsapi.org/v2/everything?q=${KEY_WORD}&sources=CNN,fox-news&sortBy=publishedAt&apiKey=${API_KEY}`
+        let trendingURL = `/trending`;
+        let searchURL = `/search?KEY_WORD=${KEY_WORD}`
 
         let menuButton = document.querySelector("#menuButton");
         let categories = document.querySelectorAll(".category");
@@ -13,6 +13,10 @@
         let logo = document.querySelector(".logo");
         let profileCard = document.querySelector(".profile-card");
 
+    // ------------------------------------------------------------------------------------------------------------
+
+        // Function for getting and shorting the date.
+        // To create a more readable format to display.
         let getDate = (shortDate) => {
             let newDate = new Date(shortDate);
             let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -23,14 +27,22 @@
             return fixedDate
         }
 
+    // ------------------------------------------------------------------------------------------------------------
+
+        // Quick function for removing elements in an array.
         let removeElements = (elms) => elms.forEach(el => el.remove());
 
+    // ------------------------------------------------------------------------------------------------------------
+
+        // Go to homepage if they click logo
         logo.addEventListener('click', () => cardData(trendingURL))
 
-        $(document).on('click', '.profile-card, .content', () => $('.profile-card, .profile-clip, .profile-pic, .cover, .button, .name, .info, .left, .right, .content').toggleClass('expand'));
+    // ------------------------------------------------------------------------------------------------------------
 
+        // Page setup handles what cards are on the page.
         let pageSetup = async () => {
 
+            // Dropdown menu for navigation.
             menuButton.addEventListener('change', () => {
                 if (menuButton.checked) {
                     document.querySelector(".the-bass").classList.add("dropped");
@@ -39,15 +51,19 @@
                 }
             });
 
+            // Basic switch case function used for handling -
+            // what the user clicks on in the navigation.
             for (let category of categories) {
                 category.addEventListener('click', () => {
 
                     let searchQuery = category.textContent;
                     searchQuery = searchQuery.toLowerCase();
 
+                    // After getting the entered text if the user have entered any of these -
+                    // it'll call a function relevant to what they click.
                     switch (searchQuery) {
+
                         case "trending":
-                            console.log(`Changing query to trending`)
                             cardData(trendingURL);
                             break;
 
@@ -56,46 +72,61 @@
                             break;
 
                         case "credits":
-                            console.log("Changing query to credits")
                             displayCredits();
                             break;
 
                         default:
-                            console.log(`Changing query to ${searchQuery}`)
-                            cardData(`https://newsapi.org/v2/top-headlines?category=${searchQuery}&country=us&apiKey=${API_KEY}`);
+                            cardData(`/news?searchQuery=${searchQuery}`);
                             break;
                     }
 
                 });
             }
 
+            // Loads trending news regardless - as a sort of homepage?
             cardData(trendingURL);
         }
 
+// ------------------------------------------------------------------------------------------------------------
+
+        // Function for clicking on the search button in navigation.
         let searchFunction = () => {
+
+            // Remove all cards on the page.
             removeElements(document.querySelectorAll(".newCard"))
+
+            // Changes to blank to give the feel of a text area.
+            // Its still just a label that you can write on in the DOM.
             searchInput.textContent = ""
 
+            // Checks to see if the key they press is enter, if it is -
+            // get the entered text and search using that as a query.
             searchInput.addEventListener('keydown', (event) => {
                 if (event.keyCode === 13) {
 
+                    // Stops you from new lining.
                     event.preventDefault();
+
                     KEY_WORD = searchInput.textContent
-                    cardData(`https://newsapi.org/v2/everything?q=${KEY_WORD}&sources=CNN&sortBy=publishedAt&apiKey=${API_KEY}`)
+                    cardData(`/search?KEY_WORD=${KEY_WORD}`)
 
                 }
             });
 
+            // If you click oof, label reverts to "Search".
             searchInput.addEventListener('focusout', () => {
                 searchInput.textContent = "Search"
             });
         }
 
+        // Used for allowing the user to open up each news card in their browser -
+        // if they choose to click on it.
         let createLink = () => {
+
+            // Had to add a setTimeout, didn't know how to use await in this case -
+            // due to it running before any cards were created in the DOM.
             setTimeout(() => {
                 let allCards = document.querySelectorAll(".newCard")
-                console.log(allCards)
-
                 for (let i = 0; i < allCards.length; i++) {
                     allCards[i].addEventListener('click', () => {
                         window.open(currentNewsArray[i].url)
@@ -104,13 +135,26 @@
             }, 1500)
         }
 
+// ------------------------------------------------------------------------------------------------------------
+
+        // Used for creating the data behind each card.
         let cardData = async (url) => {
+
             let results = await fetch(url);
             let data = await results.json();
+
+            // Empty array being created to run a loop through to create -
+            // multiple cards.
             window.currentNewsArray = []
 
+            // For loop used for creating multiple arrays with objects in them.
             for (object of data.articles) {
+
+                // Quick filter to remove irrelevant -
+                // or articles that ruin site aesthetics.
                 if (object.hasOwnProperty("urlToImage") && object.urlToImage !== "" && object.title.length < 70) {
+
+                    // Pushing objects to an array
                     currentNewsArray.push({
                         image: object.urlToImage,
                         date: [getDate(object.publishedAt).split(" ")[0], getDate(object.publishedAt).split(" ")[1]],
@@ -121,12 +165,24 @@
                     });
                 }
             }
+
+            // Calling create card function now that we've gathered the relevant data.
             createCards();
+
+            // Returning data just incase I need it later.
             return currentNewsArray
         }
 
+    // ------------------------------------------------------------------------------------------------------------
+
+        // Creating cards function with data sent through earlier.
         let createCards = async () => {
+
+            // Removing existing cards just incase.
             removeElements(document.querySelectorAll(".newCard"))
+
+            // For loop creating dynamic HTML using the earlier objects created.
+            // Card represents each object, currentNewsArray being the array of objects.
             for (card of currentNewsArray) {
                 document.querySelector(".body").innerHTML += `
                     <div class="newCard">
@@ -140,13 +196,23 @@
                     </div>
                 `
             }
+
+            // Calling function that will allow the user to click on each news card.
             createLink()
+
+            // Removing credits container if its still in DOM.
             if (document.querySelector(".container")) {
                 document.querySelector(".container").remove()
             }
         }
 
+    // ------------------------------------------------------------------------------------------------------------
+
+        // Creating entire dynamic DOM element for credits -
+        // tried to do it via html but was annoying my other elements.
         let displayCredits = () => {
+
+            // Remove all previous cards.
             removeElements(document.querySelectorAll(".newCard"))
             document.querySelector(".body").innerHTML += `
                     <div class="container">
@@ -177,8 +243,10 @@
                         </div>
                       </div>
                     </div>
-                    `
+                `
 
+            // Click event for the credits page, dunno why but when I set it to
+            // variables, they stopped working, so I used querySelectors.
             document.querySelector(".profile-card").addEventListener('click', () => {
                 if (!document.querySelector(".profile-card").classList.contains("expand")) {
                     document.querySelector(".profile-pic").style.display = "none";
@@ -188,6 +256,12 @@
             });
         }
 
+        // For the credits page, jquery seemed easier for this amount of classes.
+        $(document).on('click', '.profile-card, .content', () => {
+            $('.profile-card, .profile-clip, .profile-pic, .cover, .button, .name, .info, .left, .right, .content').toggleClass('expand');
+        });
+
+        // Create page.
         pageSetup()
 
 
