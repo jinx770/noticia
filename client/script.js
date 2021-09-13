@@ -226,7 +226,7 @@
                           <img alt="Troy Thompson" class="profile-pic" src="https://alder.vercel.app/assets/img/portfolio/Image107.jpg"/>
                           <i class="zmdi zmdi-close close"></i>
                           <div class="name">
-                            Troy Thompson
+                            jinx770
                             <span class="info">
                               Junior UX Designer
                             </span>
