@@ -223,7 +223,7 @@
                           </div>
                         </div>
                         <div class="profile-wrap">
-                          <img alt="Troy Thompson" class="profile-pic" src="https://alder.vercel.app/assets/img/portfolio/Image107.jpg"/>
+                          <img alt="developers name" class="profile-pic" src="https://alder.vercel.app/assets/img/portfolio/Image107.jpg"/>
                           <i class="zmdi zmdi-close close"></i>
                           <div class="name">
                             jinx770
